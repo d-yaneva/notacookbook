@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:google_mlkit_image_labeling/google_mlkit_image_labeling.dart';
 import 'package:image_picker/image_picker.dart';
 
 void main() {
@@ -38,18 +39,23 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   File? image;
   late ImagePicker imagePicker;
+  late ImageLabeler labeler;
 
   @override
   void initState() {
 
     super.initState();
     imagePicker = ImagePicker();
+
+     ImageLabelerOptions options = ImageLabelerOptions(confidenceThreshold: 0.6); // from 0 to 1
+     labeler = ImageLabeler(options: options);
   }
 
    chooseImage()async{
     XFile? selectedImage = await imagePicker.pickImage(source: ImageSource.gallery);
     if(selectedImage != null){
       image = File(selectedImage.path);
+      performImageLabeling();
       setState(() {
         image;
       });
@@ -61,12 +67,38 @@ class _MyHomePageState extends State<MyHomePage> {
     XFile? selectedImage = await imagePicker.pickImage(source: ImageSource.camera);
     if(selectedImage != null){
       image = File(selectedImage.path);
+      performImageLabeling();
       setState(() {
         image;
       });
     }
 
   }
+
+String results = "";
+
+performImageLabeling() async {
+  results = "";
+
+InputImage inputImage = InputImage.fromFile(image!);
+
+final List<ImageLabel> labels = await labeler.processImage(inputImage);
+
+for (ImageLabel label in labels) {
+  final String text = label.label;
+  final int index = label.index;
+  final double confidence = label.confidence;
+
+  print(text+""+confidence.toString());
+  results+=text+""+confidence.toStringAsFixed(2)+"\n";
+
+  setState(() {
+    results;
+  });
+}
+
+}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,6 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
+        child:SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -86,8 +119,10 @@ class _MyHomePageState extends State<MyHomePage> {
             },onLongPress: (){
               captureImage();
             },
-             child: const Text('Choose or capture'))
+             child: const Text('Choose or capture')),
+             Text(results)
           ],
+        ),
         ),
       ),
     );

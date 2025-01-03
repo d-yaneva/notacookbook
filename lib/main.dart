@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Not a cookbook'),
     );
   }
 }
@@ -111,16 +111,29 @@ for (ImageLabel label in labels) {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            image == null
-                ? Icon(Icons.image_outlined, size: 58)
-                : Image.file(image!),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height/2,
+                child: image == null
+                    ? Icon(Icons.image_outlined, size: 58)
+                    : Image.file(image!),
+              ),         
             ElevatedButton(onPressed: () {
               chooseImage();
             },onLongPress: (){
               captureImage();
             },
              child: const Text('Choose or capture')),
-             Text(results)
+            Card(
+              color: Colors.white10,
+              child: Container(
+                child:Text(results,style: TextStyle(fontSize: 21),),
+                width: MediaQuery.of(context).size.width,
+                padding: EdgeInsets.all(10),
+              
+              ) , 
+               margin: EdgeInsets.all(10),
+            )        
           ],
         ),
         ),

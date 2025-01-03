@@ -3,6 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_image_labeling/google_mlkit_image_labeling.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter/services.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,8 +13,6 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
-
 
   // This widget is the root of your application.
   @override
@@ -47,9 +48,19 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     imagePicker = ImagePicker();
 
-     ImageLabelerOptions options = ImageLabelerOptions(confidenceThreshold: 0.6); // from 0 to 1
-     labeler = ImageLabeler(options: options);
+    //  ImageLabelerOptions options = ImageLabelerOptions(confidenceThreshold: 0.6); // from 0 to 1
+    //  labeler = ImageLabeler(options: options);
+    loadModel();
   }
+
+loadModel() async {
+  final modelPath = await getModelPath('assets/foods.tflite');
+final options = LocalLabelerOptions(
+  confidenceThreshold: 0.8,
+  modelPath: modelPath,
+);
+ labeler = ImageLabeler(options: options);
+}
 
    chooseImage()async{
     XFile? selectedImage = await imagePicker.pickImage(source: ImageSource.gallery);
@@ -97,6 +108,18 @@ for (ImageLabel label in labels) {
   });
 }
 
+}
+
+Future<String> getModelPath(String asset) async {
+  final path = '${(await getApplicationSupportDirectory()).path}/$asset';
+  await Directory(dirname(path)).create(recursive: true);
+  final file = File(path);
+  if (!await file.exists()) {
+    final byteData = await rootBundle.load(asset);
+    await file.writeAsBytes(byteData.buffer
+            .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
+  }
+  return file.path;
 }
 
   @override

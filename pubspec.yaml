@@ -24,3 +24,7 @@ flutter:
   uses-material-design: true
   assets:
      - assets/foods.tflite
+     - assets/images/breakfast.jpg
+     - assets/images/dinner.jpg
+     - assets/images/dessert.jpg
+     - assets/images/food_recognition.jpg

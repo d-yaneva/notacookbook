@@ -56,7 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
 loadModel() async {
   final modelPath = await getModelPath('assets/foods.tflite');
 final options = LocalLabelerOptions(
-  confidenceThreshold: 0.8,
+  confidenceThreshold: 0.7,
   modelPath: modelPath,
 );
  labeler = ImageLabeler(options: options);

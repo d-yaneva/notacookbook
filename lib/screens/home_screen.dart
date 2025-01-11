@@ -14,19 +14,18 @@ class HomeScreen extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(
           title,
-          style: GoogleFonts.lilyScriptOne(fontSize: 24), // AppBar font style
+          style: GoogleFonts.lilyScriptOne(fontSize: 35),
         ),
         centerTitle: true, // Centers the title in the AppBar
       ),
       body: Container(
-        color: const Color(0xFFFAEDCD), // Background color
+        color: const Color(0xFFCCD5AE), // Background color
         child: Column(
           children: [
-            // Lace image under the AppBar
             Image.asset(
-              'assets/images/lace2.png', // Make sure the lace image is in your assets
+              'assets/images/lace2.png', 
               width: double.infinity,
-              height: 50, // Adjust the height as needed
+              height: 30, 
               fit: BoxFit.cover,
             ),
             Expanded(
@@ -39,7 +38,7 @@ class HomeScreen extends StatelessWidget {
                       onTap: () => Navigator.push(
                         context,
                         PageRouteBuilder(
-                          pageBuilder: (_, __, ___) => const RecipeListScreen(type: 'All Recipes'),
+                          pageBuilder: (_, __, ___) => const RecipeListScreen(type: 'All Recipes'), // Pass 'All Recipes'
                           transitionsBuilder: (_, animation, __, child) {
                             const begin = Offset(-1.0, 0.0); // Start from the left
                             const end = Offset.zero; // End at the center
@@ -58,14 +57,12 @@ class HomeScreen extends StatelessWidget {
                       child: Stack(
                         clipBehavior: Clip.none, // To allow the icon to overflow
                         children: [
-                          // Replace the container with an image
                           Image.asset(
-                            'assets/images/home_page_widget.png', // The new image you want to use
-                            width: 300,
-                            height: 120, // Increased height to add space for the text
-                            fit: BoxFit.cover, // Adjust the image fit to cover the container
+                            'assets/images/home_page_widget.png',
+                            width: 380,
+                            height: 120,
+                            fit: BoxFit.cover, 
                           ),
-                          // Add a bow-like icon in the top-left corner
                           Positioned(
                             top: -10,
                             left: -10,
@@ -75,18 +72,14 @@ class HomeScreen extends StatelessWidget {
                               height: 80,
                             ),
                           ),
-                          // Center the text over the image
-                          Positioned(
-                            bottom: 10, // Move the text a bit higher or lower on the image
-                            left: 0,
-                            right: 0,
-                            child: Center(
+                          Positioned.fill(
+                            child: Align(
+                              alignment: Alignment.center, 
                               child: Text(
                                 'See Recipes',
-                                style: GoogleFonts.borel(
-                                  fontSize: 24,
+                                style: GoogleFonts.lilyScriptOne(
+                                  fontSize: 30,
                                   color: Colors.black,
-                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ),
@@ -94,7 +87,8 @@ class HomeScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 20), // Add space between buttons
+                    const SizedBox(height: 30), // Space between buttons
+                    
                     // Recognize Recipe Button
                     GestureDetector(
                       onTap: () => Navigator.push(
@@ -102,8 +96,8 @@ class HomeScreen extends StatelessWidget {
                         PageRouteBuilder(
                           pageBuilder: (_, __, ___) => const GetFoodScreen(title: 'Recognize Recipe'),
                           transitionsBuilder: (_, animation, __, child) {
-                            const begin = Offset(-1.0, 0.0); // Start from the left
-                            const end = Offset.zero; // End at the center
+                            const begin = Offset(-1.0, 0.0); 
+                            const end = Offset.zero; 
                             const curve = Curves.easeInOut;
 
                             final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
@@ -119,14 +113,12 @@ class HomeScreen extends StatelessWidget {
                       child: Stack(
                         clipBehavior: Clip.none, // To allow the icon to overflow
                         children: [
-                          // Replace the container with an image
                           Image.asset(
-                            'assets/images/home_page_widget.png', // The new image you want to use
-                            width: 300,
-                            height: 120, // Increased height to add space for the text
-                            fit: BoxFit.cover, // Adjust the image fit to cover the container
+                            'assets/images/home_page_widget.png',
+                            width: 380,
+                            height: 120,
+                            fit: BoxFit.cover, 
                           ),
-                          // Add a bow-like icon in the top-left corner
                           Positioned(
                             top: -10,
                             left: -10,
@@ -136,18 +128,14 @@ class HomeScreen extends StatelessWidget {
                               height: 80,
                             ),
                           ),
-                          // Center the text over the image
-                          Positioned(
-                            bottom: 10, // Move the text a bit higher or lower on the image
-                            left: 0,
-                            right: 0,
-                            child: Center(
+                          Positioned.fill(
+                            child: Align(
+                              alignment: Alignment.center, 
                               child: Text(
                                 'Recognize Recipe',
-                                style: GoogleFonts.borel(
-                                  fontSize: 24,
+                                style: GoogleFonts.lilyScriptOne(
+                                  fontSize: 30,
                                   color: Colors.black,
-                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ),

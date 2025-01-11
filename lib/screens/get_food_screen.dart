@@ -99,7 +99,7 @@ class _GetFoodScreennState extends State<GetFoodScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: Color(0xFFCCD5AE), // AppBar color
         title: Text(widget.title),
       ),
       body: Center(
@@ -110,6 +110,7 @@ class _GetFoodScreennState extends State<GetFoodScreen> {
               Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height / 2,
+                color: Color(0xFFE9EDC9), // Background color
                 child: image == null
                     ? Icon(Icons.image_outlined, size: 58)
                     : Image.file(image!),
@@ -121,9 +122,13 @@ class _GetFoodScreennState extends State<GetFoodScreen> {
                   onLongPress: () {
                     captureImage();
                   },
-                  child: const Text('Choose or capture')),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFFCCD5AE), // Button color
+                  ),
+                  child: const Text('Choose or hold to capture')),
+                  
               Card(
-                color: Colors.white10,
+                color: Color(0xFFFEFAE0), // Text container color
                 margin: EdgeInsets.all(10),
                 child: Container(
                   child: Text(

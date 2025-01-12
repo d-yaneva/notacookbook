@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:notacookbook/features/recipe_list.dart';
+import 'package:notacookbook/features/recipe_model.dart';
 
 class RecipeListScreen extends StatefulWidget {
   final String type;
@@ -12,8 +14,8 @@ class RecipeListScreen extends StatefulWidget {
 
 class _RecipeListScreenState extends State<RecipeListScreen> {
   late String selectedType;
-  late List<Map<String, String>> filteredRecipes;
-  late List<Map<String, String>> allRecipes;
+  late List<Recipe> filteredRecipes; // Use Recipe objects
+  late List<Recipe> allRecipes;
 
   @override
   void initState() {
@@ -33,10 +35,9 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
         ),
       ),
       body: Container(
-        color: const Color.fromARGB(100, 250, 237, 205), // background color
+        color: const Color.fromARGB(100, 250, 237, 205),
         child: Column(
-          children: [    
-            // Search bar
+          children: [   
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: TextField(
@@ -63,68 +64,59 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-             ElevatedButton(
-  onPressed: () {
-    setState(() {
-      selectedType = 'All Recipes';
-      filteredRecipes = allRecipes; // Show all recipes
-    });
-  },
-  child: Text(
-    'All Recipes',
-    style: GoogleFonts.lilyScriptOne(
-      fontSize: 18,
-      color: Colors.black, // Set text color to black
-    ),
-  ),
-  style: ElevatedButton.styleFrom(
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(30),
-    ),
-    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-  ),
-),
-ElevatedButton(
-  onPressed: () {
-    setState(() {
-      selectedType = 'Main Course';
-      filteredRecipes = filterRecipesByType('Main Course');
-    });
-  },
-  child: Text(
-    'Main Course',
-    style: GoogleFonts.lilyScriptOne(
-      color: Colors.black, // Set text color to black
-    ),
-  ),
-),
-const SizedBox(width: 10),
-ElevatedButton(
-  onPressed: () {
-    setState(() {
-      selectedType = 'Dessert';
-      filteredRecipes = filterRecipesByType('Dessert');
-    });
-  },
-  child: Text(
-    'Dessert',
-    style: GoogleFonts.lilyScriptOne(
-      color: Colors.black, // Set text color to black
-    ),
-  ),
-),
-
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      selectedType = 'All Recipes';
+                      filteredRecipes = allRecipes;
+                    });
+                  },
+                  child: Text(
+                    'All Recipes',
+                    style: GoogleFonts.lilyScriptOne(color: Colors.black),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      selectedType = 'Main Course';
+                      filteredRecipes = filterRecipesByType('Main Course');
+                    });
+                  },
+                  child: Text(
+                    'Main Course',
+                    style: GoogleFonts.lilyScriptOne(color: Colors.black),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      selectedType = 'Dessert';
+                      filteredRecipes = filterRecipesByType('Dessert');
+                    });
+                  },
+                  child: Text(
+                    'Dessert',
+                    style: GoogleFonts.lilyScriptOne(color: Colors.black),
+                  ),
+                ),
               ],
             ),
-            // Recipe list
             Expanded(
               child: ListView.builder(
                 itemCount: filteredRecipes.length,
                 itemBuilder: (context, index) {
                   return RecipeCard(
-                    title: filteredRecipes[index]['title']!,
-                    image: filteredRecipes[index]['image']!,
-                    description: filteredRecipes[index]['description']!,
+                    title: filteredRecipes[index].title,
+                    image: filteredRecipes[index].image,
+                    description: 'Description here', // Update description if needed
                   );
                 },
               ),
@@ -135,44 +127,24 @@ ElevatedButton(
     );
   }
 
-  List<Map<String, String>> getRecipes() {
-    return [
-      {
-        'title': 'Apple Pie',
-        'image': 'assets/images/apple_pie.jpg',
-        'description': 'Classic apple pie with a flaky crust.',
-        'type': 'Dessert',
-      },
-      {
-        'title': 'Barbecue Ribs',
-        'image': 'assets/images/barbecue_ribs.jpg',
-        'description': 'Tender and smoky barbecue ribs.',
-        'type': 'Main Course',
-      },
-      {
-        'title': 'Baklava',
-        'image': 'assets/images/baklava.jpg',
-        'description': 'Sweet and flaky pastry with nuts and syrup.',
-        'type': 'Dessert',
-      },
-    ];
+  List<Recipe> getRecipes() {
+    return recipes;
   }
 
-  List<Map<String, String>> filterRecipesByType(String type) {
-    return allRecipes.where((recipe) => recipe['type'] == type).toList();
+  List<Recipe> filterRecipesByType(String type) {
+    return allRecipes.where((recipe) => recipe.type == type).toList();
   }
 
-  List<Map<String, String>> filterRecipesByQuery(String query) {
+  List<Recipe> filterRecipesByQuery(String query) {
     return allRecipes
         .where((recipe) =>
-            recipe['title']!.toLowerCase().contains(query.toLowerCase()))
+            recipe.title.toLowerCase().contains(query.toLowerCase()))
         .toList();
   }
 }
-
 class RecipeCard extends StatelessWidget {
   final String title;
-  final String image;
+  final String image;  // Now this is the image path
   final String description;
 
   const RecipeCard({
@@ -189,15 +161,14 @@ class RecipeCard extends StatelessWidget {
       child: ListTile(
         contentPadding: const EdgeInsets.all(10),
         leading: Image.asset(
-          image,
+          image,  // Use the image path here
           width: 80,
           height: 80,
           fit: BoxFit.cover,
         ),
         title: Text(
           title,
-          style: GoogleFonts.lilyScriptOne(
-              fontSize: 18, fontWeight: FontWeight.bold),
+          style: GoogleFonts.lilyScriptOne(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         subtitle: Text(
           description,

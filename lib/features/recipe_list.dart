@@ -16,7 +16,7 @@ List<Recipe> recipes = [
       "1 tbsp lemon juice",
       "1 tbsp cornstarch"
     ],
-    image: Image.asset('assets/images/apple_pie.jpg'),
+    image: "assets/images/apple_pie.jpg",
     steps: [
       {"Prepare pie crust by mixing flour, butter, and water": 20},
       {"Chill the dough in the refrigerator": 30},
@@ -40,7 +40,7 @@ List<Recipe> recipes = [
       "1/2 tsp black pepper",
       "1 cup barbecue sauce"
     ],
-    image: Image.asset('assets/images/barbecue_ribs.jpg'),
+    image: "assets/images/barbecue_ribs.jpg",
     steps: [
       {"Remove membrane from ribs and season with dry rub": 15},
       {"Wrap ribs in foil and bake at 300°F (150°C)": 120},
@@ -62,7 +62,7 @@ List<Recipe> recipes = [
       "1 tsp vanilla extract",
       "1/2 lemon (juice)"
     ],
-    image: Image.asset('assets/images/baklava.jpg'),
+    image: "assets/images/baklava.jpg",
     steps: [
       {"Preheat oven to 350°F (175°C)": 5},
       {"Layer phyllo dough with butter in a baking dish": 15},

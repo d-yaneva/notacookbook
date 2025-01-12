@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 
-class Recipe{
-
+class Recipe {
   late String title;
   late String type;
   late List<String> ingredients;
-  late Image image;
+  late String image;  // Store the image path as a string
   late List<Map<String, int>> steps;
 
   Recipe({

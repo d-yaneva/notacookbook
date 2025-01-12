@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart'; // Import Google Fonts
+import 'package:google_fonts/google_fonts.dart';
 
 class RecipeListScreen extends StatefulWidget {
   final String type;
@@ -19,7 +19,7 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
   void initState() {
     super.initState();
     selectedType = widget.type;
-    allRecipes = getRecipes(); 
+    allRecipes = getRecipes();
     filteredRecipes = filterRecipesByType(selectedType);
   }
 
@@ -33,9 +33,9 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
         ),
       ),
       body: Container(
-        color: const Color.fromARGB(100,250, 237, 205), //background color
+        color: const Color.fromARGB(100, 250, 237, 205), // background color
         child: Column(
-          children: [
+          children: [    
             // Search bar
             Padding(
               padding: const EdgeInsets.all(10.0),
@@ -43,13 +43,14 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
                 decoration: InputDecoration(
                   labelText: 'Search Recipes',
                   prefixIcon: Icon(Icons.search, color: Colors.black),
-                  filled: true, 
-                  fillColor: Colors.white, 
+                  filled: true,
+                  fillColor: Colors.white,
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30), 
-                    borderSide: BorderSide.none, 
+                    borderRadius: BorderRadius.circular(30),
+                    borderSide: BorderSide.none,
                   ),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10), 
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 ),
                 style: GoogleFonts.lilyScriptOne(),
                 onChanged: (query) {
@@ -59,39 +60,60 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
                 },
               ),
             ),
-
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      selectedType = 'Breakfast';
-                      filteredRecipes = filterRecipesByType('Breakfast');
-                    });
-                  },
-                  child: Text('Breakfast', style: GoogleFonts.lilyScriptOne()), 
-                ),
-                const SizedBox(width: 10),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      selectedType = 'Lunch/Dinner';
-                      filteredRecipes = filterRecipesByType('Lunch/Dinner');
-                    });
-                  },
-                  child: Text('Lunch/Dinner', style: GoogleFonts.lilyScriptOne()), 
-                ),
-                const SizedBox(width: 10),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      selectedType = 'Dessert';
-                      filteredRecipes = filterRecipesByType('Dessert');
-                    });
-                  },
-                  child: Text('Dessert', style: GoogleFonts.lilyScriptOne()), 
-                ),
+             ElevatedButton(
+  onPressed: () {
+    setState(() {
+      selectedType = 'All Recipes';
+      filteredRecipes = allRecipes; // Show all recipes
+    });
+  },
+  child: Text(
+    'All Recipes',
+    style: GoogleFonts.lilyScriptOne(
+      fontSize: 18,
+      color: Colors.black, // Set text color to black
+    ),
+  ),
+  style: ElevatedButton.styleFrom(
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(30),
+    ),
+    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+  ),
+),
+ElevatedButton(
+  onPressed: () {
+    setState(() {
+      selectedType = 'Main Course';
+      filteredRecipes = filterRecipesByType('Main Course');
+    });
+  },
+  child: Text(
+    'Main Course',
+    style: GoogleFonts.lilyScriptOne(
+      color: Colors.black, // Set text color to black
+    ),
+  ),
+),
+const SizedBox(width: 10),
+ElevatedButton(
+  onPressed: () {
+    setState(() {
+      selectedType = 'Dessert';
+      filteredRecipes = filterRecipesByType('Dessert');
+    });
+  },
+  child: Text(
+    'Dessert',
+    style: GoogleFonts.lilyScriptOne(
+      color: Colors.black, // Set text color to black
+    ),
+  ),
+),
+
               ],
             ),
             // Recipe list
@@ -114,42 +136,23 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
   }
 
   List<Map<String, String>> getRecipes() {
-    // Sample data for all recipes
     return [
-      {
-        'title': 'Pancakes',
-        'image': 'assets/images/pancakes.jpg',
-        'description': 'Fluffy pancakes served with syrup and butter.',
-        'type': 'Breakfast',
-      },
-      {
-        'title': 'Omelette',
-        'image': 'assets/images/omelette.jpg',
-        'description': 'A classic omelette with cheese and vegetables.',
-        'type': 'Breakfast',
-      },
-      {
-        'title': 'Spaghetti Bolognese',
-        'image': 'assets/images/spaghetti_bolognese.jpg',
-        'description': 'A rich and flavorful Bolognese sauce over spaghetti.',
-        'type': 'Lunch/Dinner',
-      },
-      {
-        'title': 'Grilled Chicken',
-        'image': 'assets/images/grilled_chicken.jpg',
-        'description': 'Tender grilled chicken with a side of veggies.',
-        'type': 'Lunch/Dinner',
-      },
-      {
-        'title': 'Chocolate Cake',
-        'image': 'assets/images/chocolate_cake.jpg',
-        'description': 'A moist and rich chocolate cake with frosting.',
-        'type': 'Dessert',
-      },
       {
         'title': 'Apple Pie',
         'image': 'assets/images/apple_pie.jpg',
         'description': 'Classic apple pie with a flaky crust.',
+        'type': 'Dessert',
+      },
+      {
+        'title': 'Barbecue Ribs',
+        'image': 'assets/images/barbecue_ribs.jpg',
+        'description': 'Tender and smoky barbecue ribs.',
+        'type': 'Main Course',
+      },
+      {
+        'title': 'Baklava',
+        'image': 'assets/images/baklava.jpg',
+        'description': 'Sweet and flaky pastry with nuts and syrup.',
         'type': 'Dessert',
       },
     ];
@@ -193,19 +196,19 @@ class RecipeCard extends StatelessWidget {
         ),
         title: Text(
           title,
-          style: GoogleFonts.lilyScriptOne(fontSize: 18, fontWeight: FontWeight.bold), 
+          style: GoogleFonts.lilyScriptOne(
+              fontSize: 18, fontWeight: FontWeight.bold),
         ),
         subtitle: Text(
           description,
-          style: GoogleFonts.lilyScriptOne(), 
+          style: GoogleFonts.lilyScriptOne(),
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
         ),
         onTap: () {
-   
+          // Handle recipe card tap
         },
       ),
     );
   }
 }
-

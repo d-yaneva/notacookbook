@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart'; // Import Google Fonts
 import 'package:notacookbook/screens/get_food_screen.dart';
-import 'package:notacookbook/screens/recipe_list.dart';
+import 'package:notacookbook/screens/recipe_list_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key, required this.title});

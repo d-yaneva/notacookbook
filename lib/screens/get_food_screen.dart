@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter/services.dart';
 import 'package:notacookbook/features/recipe_list.dart';
 import 'package:notacookbook/features/recipe_model.dart';
+import 'package:notacookbook/screens/recipe_screen.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -133,62 +134,81 @@ class _GetFoodScreennState extends State<GetFoodScreen> {
     return file.path;
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xFFCCD5AE), // AppBar color
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Container(
+ @override
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+      backgroundColor: const Color(0xFFCCD5AE), // AppBar color
+      title: Text(widget.title),
+    ),
+    body: Center(
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height / 2,
+              color: const Color(0xFFE9EDC9), // Background color
+              child: image == null
+                  ? const Icon(Icons.image_outlined, size: 58)
+                  : Image.file(image!),
+            ),
+            ElevatedButton(
+              onPressed: chooseImage,
+              onLongPress: captureImage,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFFCCD5AE), // Button color
+              ),
+              child: const Text('Choose or hold to capture'),
+            ),
+            Card(
+              color: const Color(0xFFFEFAE0), // Text container color
+              margin: const EdgeInsets.all(10),
+              child: Container(
                 width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height / 2,
-                color: const Color(0xFFE9EDC9), // Background color
-                child: image == null
-                    ? const Icon(Icons.image_outlined, size: 58)
-                    : Image.file(image!),
-              ),
-              ElevatedButton(
-                onPressed: chooseImage,
-                onLongPress: captureImage,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFCCD5AE), // Button color
-                ),
-                child: const Text('Choose or hold to capture'),
-              ),
-              Card(
-                color: const Color(0xFFFEFAE0), // Text container color
-                margin: const EdgeInsets.all(10),
-                child: Container(
-                  child: Column(
-                    children: [
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  children: [
+                    Text(
+                      results.isEmpty
+                          ? "No food detected"
+                          : "$results",
+                      style: const TextStyle(fontSize: 18),
+                    ),
+                    if (matchedRecipe != null) ...[
                       Text(
-                        results.isEmpty
-                            ? "No food detected"
-                            : "$results",
-                        style: const TextStyle(fontSize: 18),
-                      ),
-                      if (matchedRecipe != null)
-                        Text(
-                          "\nRecipe: ${matchedRecipe!.title}",
-                          style: const TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
+                        "\nRecipe: ${matchedRecipe!.title}",
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
                         ),
+                      ),
+                      const SizedBox(height: 10),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  RecipeScreen(recipe: matchedRecipe!),
+                            ),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFCCD5AE),
+                        ),
+                        child: const Text('View Recipe'),
+                      ),
                     ],
-                  ),
-                  width: MediaQuery.of(context).size.width,
-                  padding: const EdgeInsets.all(10),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 }

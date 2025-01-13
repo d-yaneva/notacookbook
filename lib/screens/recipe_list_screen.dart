@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:notacookbook/features/recipe_list.dart';
 import 'package:notacookbook/features/recipe_model.dart';
+import 'package:notacookbook/screens/recipe_screen.dart';
 
 class RecipeListScreen extends StatefulWidget {
   final String type;
@@ -37,7 +38,7 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
       body: Container(
         color: const Color.fromARGB(100, 250, 237, 205),
         child: Column(
-          children: [   
+          children: [
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: TextField(
@@ -114,9 +115,7 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
                 itemCount: filteredRecipes.length,
                 itemBuilder: (context, index) {
                   return RecipeCard(
-                    title: filteredRecipes[index].title,
-                    image: filteredRecipes[index].image,
-                    description: 'Description here', // Update description if needed
+                    recipe: filteredRecipes[index], // Pass the entire recipe object
                   );
                 },
               ),
@@ -142,16 +141,13 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
         .toList();
   }
 }
+
 class RecipeCard extends StatelessWidget {
-  final String title;
-  final String image;  // Now this is the image path
-  final String description;
+  final Recipe recipe;
 
   const RecipeCard({
     super.key,
-    required this.title,
-    required this.image,
-    required this.description,
+    required this.recipe, // Now this is a Recipe object
   });
 
   @override
@@ -161,23 +157,29 @@ class RecipeCard extends StatelessWidget {
       child: ListTile(
         contentPadding: const EdgeInsets.all(10),
         leading: Image.asset(
-          image,  // Use the image path here
+          recipe.image, // Use the image from the Recipe object
           width: 80,
           height: 80,
           fit: BoxFit.cover,
         ),
         title: Text(
-          title,
+          recipe.title,
           style: GoogleFonts.lilyScriptOne(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         subtitle: Text(
-          description,
+          'Description here', // You can update this with a description field from Recipe
           style: GoogleFonts.lilyScriptOne(),
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
         ),
         onTap: () {
-          // Handle recipe card tap
+          // Navigate to RecipeScreen when tapped and pass the recipe object
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => RecipeScreen(recipe: recipe),
+            ),
+          );
         },
       ),
     );

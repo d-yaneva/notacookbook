@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:google_mlkit_image_labeling/google_mlkit_image_labeling.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/services.dart';
+import 'package:notacookbook/features/recipe_list.dart';
+import 'package:notacookbook/features/recipe_model.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -19,6 +21,17 @@ class _GetFoodScreennState extends State<GetFoodScreen> {
   File? image;
   late ImagePicker imagePicker;
   late ImageLabeler labeler;
+  String results = "";
+  Recipe? matchedRecipe;
+
+  Recipe? getRecipe(String food) {
+    for (var recipe in recipes) {
+      if (recipe.title.toLowerCase() == food.toLowerCase()) {
+        return recipe;
+      }
+    }
+    return null;
+  }
 
   @override
   void initState() {
@@ -60,27 +73,52 @@ class _GetFoodScreennState extends State<GetFoodScreen> {
     }
   }
 
-  String results = "";
-
   performImageLabeling() async {
     results = "";
+    matchedRecipe = null;
+
+    if (image == null) {
+      print("No image selected for labeling.");
+      return;
+    }
 
     InputImage inputImage = InputImage.fromFile(image!);
-
     final List<ImageLabel> labels = await labeler.processImage(inputImage);
 
+    if (labels.isEmpty) {
+      print("No labels detected.");
+    } else {
+      print("Detected labels:");
+    }
+
     for (ImageLabel label in labels) {
-      final String text = label.label;
-      final int index = label.index;
+      final String originalText = label.label; // Original detected label
+      final String cleanedText =
+          originalText.replaceAll(RegExp(r'[0-9]'), '').trim(); // Remove numbers
       final double confidence = label.confidence;
 
-      print(text + "" + confidence.toString());
-      results += text + "" + confidence.toStringAsFixed(2) + "\n";
+      print("Original: $originalText, Cleaned: $cleanedText (${confidence.toStringAsFixed(2)})");
 
-      setState(() {
-        results;
-      });
+      results += "$cleanedText (${confidence.toStringAsFixed(2)})\n";
+
+      matchedRecipe = getRecipe(cleanedText);
+      if (matchedRecipe != null) {
+        print("Match found! Recipe: ${matchedRecipe!.title}");
+        break; // Stop searching after the first match
+      } else {
+        print("No match found for: $cleanedText");
+      }
     }
+
+    if (matchedRecipe == null) {
+      print("No recipe matched any of the detected labels.");
+      print("Available recipes in the list:");
+      for (var recipe in recipes) {
+        print(" - ${recipe.title}");
+      }
+    }
+
+    setState(() {});
   }
 
   Future<String> getModelPath(String asset) async {
@@ -99,7 +137,7 @@ class _GetFoodScreennState extends State<GetFoodScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFFCCD5AE), // AppBar color
+        backgroundColor: const Color(0xFFCCD5AE), // AppBar color
         title: Text(widget.title),
       ),
       body: Center(
@@ -110,35 +148,43 @@ class _GetFoodScreennState extends State<GetFoodScreen> {
               Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height / 2,
-                color: Color(0xFFE9EDC9), // Background color
+                color: const Color(0xFFE9EDC9), // Background color
                 child: image == null
-                    ? Icon(Icons.image_outlined, size: 58)
+                    ? const Icon(Icons.image_outlined, size: 58)
                     : Image.file(image!),
               ),
               ElevatedButton(
-                  onPressed: () {
-                    chooseImage();
-                  },
-                  onLongPress: () {
-                    captureImage();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFFCCD5AE), // Button color
-                  ),
-                  child: const Text('Choose or hold to capture')),
-                  
+                onPressed: chooseImage,
+                onLongPress: captureImage,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFCCD5AE), // Button color
+                ),
+                child: const Text('Choose or hold to capture'),
+              ),
               Card(
-                color: Color(0xFFFEFAE0), // Text container color
-                margin: EdgeInsets.all(10),
+                color: const Color(0xFFFEFAE0), // Text container color
+                margin: const EdgeInsets.all(10),
                 child: Container(
-                  child: Text(
-                    results,
-                    style: TextStyle(fontSize: 21),
+                  child: Column(
+                    children: [
+                      Text(
+                        results.isEmpty
+                            ? "No food detected"
+                            : "$results",
+                        style: const TextStyle(fontSize: 18),
+                      ),
+                      if (matchedRecipe != null)
+                        Text(
+                          "\nRecipe: ${matchedRecipe!.title}",
+                          style: const TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                    ],
                   ),
                   width: MediaQuery.of(context).size.width,
-                  padding: EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
                 ),
-              )
+              ),
             ],
           ),
         ),

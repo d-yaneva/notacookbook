@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:notacookbook/features/recipe_model.dart';
 
 class RecipeScreen extends StatefulWidget {
@@ -11,28 +12,37 @@ class RecipeScreen extends StatefulWidget {
 }
 
 class _RecipeScreenState extends State<RecipeScreen> {
-  // Track the checked ingredients
   late List<bool> checkedIngredients;
 
   @override
   void initState() {
     super.initState();
-    // Initialize checkedIngredients list based on the number of ingredients
+
     checkedIngredients = List<bool>.filled(widget.recipe.ingredients.length, false);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFCCD5AE),
       appBar: AppBar(
-        title: Text(widget.recipe.title),
+        title: Text(
+          widget.recipe.title,
+          style: GoogleFonts.lilyScriptOne(),
+        ),
+        backgroundColor: const Color(0xFFCCD5AE),
+        foregroundColor: Colors.black,
+        elevation: 0,
       ),
       body: DefaultTabController(
-        length: 2, // Two tabs: Ingredients and Steps
+        length: 2,
         child: Column(
           children: [
             TabBar(
-              tabs: [
+              labelColor: Colors.black,
+              unselectedLabelColor: Colors.black54,
+              labelStyle: GoogleFonts.lilyScriptOne(),
+              tabs: const [
                 Tab(text: 'Ingredients'),
                 Tab(text: 'Steps'),
               ],
@@ -40,7 +50,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
             Expanded(
               child: TabBarView(
                 children: [
-                  // Ingredients tab with checkboxes on the right
+                  // Ingredients tab with checkboxes
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ListView.builder(
@@ -52,7 +62,10 @@ class _RecipeScreenState extends State<RecipeScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Expanded(
-                                child: Text(widget.recipe.ingredients[index]),
+                                child: Text(
+                                  widget.recipe.ingredients[index],
+                                  style: GoogleFonts.lilyScriptOne(),
+                                ),
                               ),
                               Checkbox(
                                 value: checkedIngredients[index],
@@ -69,16 +82,25 @@ class _RecipeScreenState extends State<RecipeScreen> {
                     ),
                   ),
                   // Steps tab
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ListView.builder(
-                      itemCount: widget.recipe.steps.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          title: Text(widget.recipe.steps[index].keys.first),
-                          subtitle: Text('Time: ${widget.recipe.steps[index].values.first} minutes'),
-                        );
-                      },
+                  Container(
+                    color: const Color(0xFFE7E7E7), // Different background color for steps
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ListView.builder(
+                        itemCount: widget.recipe.steps.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            title: Text(
+                              widget.recipe.steps[index].keys.first,
+                              style: GoogleFonts.lilyScriptOne(),
+                            ),
+                            subtitle: Text(
+                              'Time: ${widget.recipe.steps[index].values.first} minutes',
+                              style: GoogleFonts.lilyScriptOne(),
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ],

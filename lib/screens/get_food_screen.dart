@@ -97,34 +97,65 @@ class _GetFoodScreenState extends State<GetFoodScreen> {
     }
   }
 
-  performImageLabeling() async {
-    results = "";
-    matchedRecipe = null;
+ performImageLabeling() async {
+  results = "";
+  matchedRecipe = null;
 
-    if (image == null) {
-      print("No image selected for labeling.");
-      return;
-    }
-
-    InputImage inputImage = InputImage.fromFile(image!);
-    final List<ImageLabel> labels = await labeler.processImage(inputImage);
-
-    for (ImageLabel label in labels) {
-      final String originalText = label.label; // Original detected label
-      final String cleanedText =
-          originalText.replaceAll(RegExp(r'[0-9]'), '').trim(); // Remove numbers
-    //  final double confidence = label.confidence;
-
-      results += cleanedText;
-
-      matchedRecipe = getRecipe(cleanedText);
-      if (matchedRecipe != null) {
-        break; // Stop searching after the first match
-      }
-    }
-
-    setState(() {});
+  if (image == null) {
+    print("No image selected for labeling.");
+    return;
   }
+
+  InputImage inputImage = InputImage.fromFile(image!);
+
+  // generic model
+  final genericLabeler = ImageLabeler(options: ImageLabelerOptions());
+  final List<ImageLabel> genericLabels = await genericLabeler.processImage(inputImage);
+  genericLabeler.close(); // Free up resources
+
+  bool isFoodDetected = false;
+
+  for (ImageLabel label in genericLabels) {
+    String cleanedText = label.label.toLowerCase();
+    if (cleanedText.contains("food") || cleanedText.contains("dish") || 
+        cleanedText.contains("meal") || cleanedText.contains("cuisine") || 
+        cleanedText.contains("snack") || cleanedText.contains("fruit") || 
+        cleanedText.contains("vegetable")) {
+      isFoodDetected = true;
+      break;
+    }
+  }
+
+  if (!isFoodDetected) {
+    setState(() {
+      results = "No food detected";
+    });
+    return;
+  }
+
+  final customLabeler = ImageLabeler(
+    options: LocalLabelerOptions(
+      confidenceThreshold: 0.7,
+      modelPath: await getModelPath('assets/foods.tflite'),
+    ),
+  );
+
+  final List<ImageLabel> customLabels = await customLabeler.processImage(inputImage);
+  customLabeler.close();
+
+  for (ImageLabel label in customLabels) {
+    final String cleanedText = label.label.replaceAll(RegExp(r'[0-9]'), '').trim();
+    results += cleanedText + " ";
+
+    matchedRecipe = getRecipe(cleanedText);
+    if (matchedRecipe != null) {
+      break;
+    }
+  }
+
+  setState(() {});
+}
+
 
   Future<String> getModelPath(String asset) async {
     final path = '${(await getApplicationSupportDirectory()).path}/$asset';

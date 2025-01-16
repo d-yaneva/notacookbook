@@ -18,13 +18,14 @@ class _RecipeListScreenState extends State<RecipeListScreen> {
   late List<Recipe> filteredRecipes; // Use Recipe objects
   late List<Recipe> allRecipes;
 
-  @override
-  void initState() {
-    super.initState();
-    selectedType = widget.type;
-    allRecipes = getRecipes();
-    filteredRecipes = filterRecipesByType(selectedType);
-  }
+@override
+void initState() {
+  super.initState();
+  selectedType = "All Recipes";
+  allRecipes = getRecipes();
+  filteredRecipes = allRecipes; 
+}
+
 
   @override
   Widget build(BuildContext context) {

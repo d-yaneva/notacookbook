@@ -17,7 +17,6 @@ class _RecipeScreenState extends State<RecipeScreen> {
   @override
   void initState() {
     super.initState();
-
     checkedIngredients = List<bool>.filled(widget.recipe.ingredients.length, false);
   }
 
@@ -38,6 +37,18 @@ class _RecipeScreenState extends State<RecipeScreen> {
         length: 2,
         child: Column(
           children: [
+            Image.asset(widget.recipe.image, height: 200, fit: BoxFit.cover),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Type: ${widget.recipe.type}', style: GoogleFonts.lilyScriptOne(fontSize: 18)),
+                  Text('Servings: ${widget.recipe.servings}', style: GoogleFonts.lilyScriptOne(fontSize: 18)),
+                  Text('Total Time: ${widget.recipe.totaltime}', style: GoogleFonts.lilyScriptOne(fontSize: 18)),
+                ],
+              ),
+            ),
             TabBar(
               labelColor: Colors.black,
               unselectedLabelColor: Colors.black54,
@@ -50,7 +61,6 @@ class _RecipeScreenState extends State<RecipeScreen> {
             Expanded(
               child: TabBarView(
                 children: [
-                  // Ingredients tab with checkboxes
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ListView.builder(
@@ -81,21 +91,18 @@ class _RecipeScreenState extends State<RecipeScreen> {
                       },
                     ),
                   ),
-                  // Steps tab
                   Container(
-                    color: const Color(0xFFE7E7E7), // Different background color for steps
+                    color: const Color(0xFFE7E7E7),
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: ListView.builder(
                         itemCount: widget.recipe.steps.length,
                         itemBuilder: (context, index) {
+                          String stepText = widget.recipe.steps[index].keys.first;
+                          int stepNumber = widget.recipe.steps[index].values.first;
                           return ListTile(
                             title: Text(
-                              widget.recipe.steps[index].keys.first,
-                              style: GoogleFonts.lilyScriptOne(),
-                            ),
-                            subtitle: Text(
-                              'Time: ${widget.recipe.steps[index].values.first} minutes',
+                              'Step $stepNumber: $stepText',
                               style: GoogleFonts.lilyScriptOne(),
                             ),
                           );

@@ -92,7 +92,7 @@ void initState() {
                     });
                   },
                   child: Text(
-                    'Main Course',
+                    '',
                     style: GoogleFonts.lilyScriptOne(color: Colors.black),
                   ),
                 ),

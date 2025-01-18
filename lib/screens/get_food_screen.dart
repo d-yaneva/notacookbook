@@ -120,13 +120,7 @@ class _GetFoodScreenState extends State<GetFoodScreen> {
 
   for (ImageLabel label in genericLabels) {
     String cleanedText = label.label.toLowerCase();
-
-    if (cleanedText.contains("person") || cleanedText.contains("face") || cleanedText.contains("human")) {
-      setState(() {
-        results = "That's not food, that's a person.";
-      });
-      return;
-    }
+    
 
     if (cleanedText.contains("animal") || cleanedText.contains("dog") || cleanedText.contains("cat")) {
       setState(() {

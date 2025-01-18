@@ -24,14 +24,36 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-     - assets/foods.tflite
-     - assets/images/breakfast.jpg
-     - assets/images/dinner.jpg
-     - assets/images/dessert.jpg
-     - assets/images/food_recognition.jpg
-     - assets/images/bow.png
-     - assets/images/home_page_widget.png
-     - assets/images/lace2.png
-     - assets/images/apple_pie.jpg
-     - assets/images/barbecue_ribs.jpg
-     - assets/images/baklava.jpg
+    - assets/foods.tflite
+    - assets/images/breakfast.jpg
+    - assets/images/dinner.jpg
+    - assets/images/dessert.jpg
+    - assets/images/food_recognition.jpg
+    - assets/images/bow.png
+    - assets/images/home_page_widget.png
+    - assets/images/lace2.png
+    - assets/images/apple_pie.jpg
+    - assets/images/baklava.jpg
+    - assets/images/burito.jpg
+    - assets/images/caesar_salad.jpg
+    - assets/images/caprese_salad.jpg
+    - assets/images/cheesecake.jpg
+    - assets/images/curry.jpg
+    - assets/images/chicken_wings.jpg
+    - assets/images/chocolate_cake.jpg
+    - assets/images/sandwich.jpg
+    - assets/images/dumplings.jpg
+    - assets/images/fish_and_chips.jpg
+    - assets/images/french_fries.jpg
+    - assets/images/grilled_cheese.jpg
+    - assets/images/burger.jpg
+    - assets/images/hot_dog.jpg
+    - assets/images/mac_and_cheese.jpg
+    - assets/images/donuts.jpg
+    - assets/images/fried_rice.jpg
+    - assets/images/omelette.jpg
+    - assets/images/pizza.jpg
+    - assets/images/spaghetti_bolognese.jpg
+    - assets/images/spaghetti_carbonara.jpeg
+    - assets/images/background.png
+

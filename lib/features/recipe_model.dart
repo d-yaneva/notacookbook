@@ -6,6 +6,8 @@ class Recipe {
   late List<String> ingredients;
   late String image;  // Store the image path as a string
   late List<Map<String, int>> steps;
+  late int servings;
+  late String totaltime;
 
   Recipe({
     required this.title,
@@ -13,5 +15,7 @@ class Recipe {
     required this.ingredients,
     required this.image,
     required this.steps,
+    required this.servings,
+    required this.totaltime,
   });
 }

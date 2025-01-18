@@ -102,37 +102,63 @@ class _GetFoodScreenState extends State<GetFoodScreen> {
   matchedRecipe = null;
 
   if (image == null) {
-    print("No image selected for labeling.");
+    setState(() {
+      results = "No image selected for labeling.";
+    });
     return;
   }
 
   InputImage inputImage = InputImage.fromFile(image!);
 
-  // generic model
+  //generic model
   final genericLabeler = ImageLabeler(options: ImageLabelerOptions());
   final List<ImageLabel> genericLabels = await genericLabeler.processImage(inputImage);
-  genericLabeler.close(); // Free up resources
+  genericLabeler.close();
 
   bool isFoodDetected = false;
+  String detectedObject = "";
 
   for (ImageLabel label in genericLabels) {
     String cleanedText = label.label.toLowerCase();
+
+    if (cleanedText.contains("person") || cleanedText.contains("face") || cleanedText.contains("human")) {
+      setState(() {
+        results = "That's not food, that's a person.";
+      });
+      return;
+    }
+
+    if (cleanedText.contains("animal") || cleanedText.contains("dog") || cleanedText.contains("cat")) {
+      setState(() {
+        results = "That's not food, that's an animal.";
+      });
+      return;
+    }
+
+    if (cleanedText.contains("object") || cleanedText.contains("furniture") || cleanedText.contains("tool")) {
+      setState(() {
+        results = "That's not food, that's an object.";
+      });
+      return;
+    }
+
     if (cleanedText.contains("food") || cleanedText.contains("dish") || 
         cleanedText.contains("meal") || cleanedText.contains("cuisine") || 
         cleanedText.contains("snack") || cleanedText.contains("fruit") || 
         cleanedText.contains("vegetable")) {
       isFoodDetected = true;
-      break;
+      detectedObject = cleanedText;
     }
   }
 
   if (!isFoodDetected) {
     setState(() {
-      results = "No food detected";
+      results = "No food detected.";
     });
     return;
   }
 
+  //custom model
   final customLabeler = ImageLabeler(
     options: LocalLabelerOptions(
       confidenceThreshold: 0.7,
@@ -143,18 +169,29 @@ class _GetFoodScreenState extends State<GetFoodScreen> {
   final List<ImageLabel> customLabels = await customLabeler.processImage(inputImage);
   customLabeler.close();
 
+  bool foundFoodInCustomModel = false;
+
   for (ImageLabel label in customLabels) {
     final String cleanedText = label.label.replaceAll(RegExp(r'[0-9]'), '').trim();
-    results += cleanedText + " ";
+    results += "$cleanedText ";
 
     matchedRecipe = getRecipe(cleanedText);
     if (matchedRecipe != null) {
+      foundFoodInCustomModel = true;
       break;
     }
   }
 
+  if (!foundFoodInCustomModel) {
+    setState(() {
+      results = "This food and recipe are not available.";
+    });
+    return;
+  }
+
   setState(() {});
 }
+
 
 
   Future<String> getModelPath(String asset) async {

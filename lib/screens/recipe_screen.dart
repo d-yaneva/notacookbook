@@ -37,21 +37,40 @@ class _RecipeScreenState extends State<RecipeScreen> {
         length: 2,
         child: Column(
           children: [
-            Image.asset(widget.recipe.image, height: 200, fit: BoxFit.cover),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Type: ${widget.recipe.type}', style: GoogleFonts.lilyScriptOne(fontSize: 18)),
-                  Text('Servings: ${widget.recipe.servings}', style: GoogleFonts.lilyScriptOne(fontSize: 18)),
-                  Text('Total Time: ${widget.recipe.totaltime}', style: GoogleFonts.lilyScriptOne(fontSize: 18)),
-                ],
-              ),
-            ),
+  
+           Row(
+  crossAxisAlignment: CrossAxisAlignment.center,
+  children: [
+    // Image section with padding
+    Padding(
+      padding: const EdgeInsets.all(8.0), // Adds padding around the image
+      child: Image.asset(
+        widget.recipe.image,
+        height: 150,
+        fit: BoxFit.cover,
+      ),
+    ),
+
+    // Expanded column for text
+    Expanded(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0), // Adds padding around the text content
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Type: ${widget.recipe.type}', style: GoogleFonts.lilyScriptOne(fontSize: 14)),
+            Text('Servings: ${widget.recipe.servings}', style: GoogleFonts.lilyScriptOne(fontSize: 14)),
+            Text('Total Time: ${widget.recipe.totaltime}', style: GoogleFonts.lilyScriptOne(fontSize: 14)),
+          ],
+        ),
+      ),
+    ),
+  ],
+),
+            // TabBar for Ingredients and Steps
             TabBar(
               labelColor: Colors.black,
-              unselectedLabelColor: Colors.black54,
+              unselectedLabelColor: const Color.fromARGB(137, 73, 73, 73),
               labelStyle: GoogleFonts.lilyScriptOne(),
               tabs: const [
                 Tab(text: 'Ingredients'),
@@ -62,7 +81,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
               child: TabBarView(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(10.0),
                     child: ListView.builder(
                       itemCount: widget.recipe.ingredients.length,
                       itemBuilder: (context, index) {
@@ -84,6 +103,8 @@ class _RecipeScreenState extends State<RecipeScreen> {
                                     checkedIngredients[index] = value ?? false;
                                   });
                                 },
+                                activeColor: Colors.white, 
+                                checkColor: Colors.black,
                               ),
                             ],
                           ),

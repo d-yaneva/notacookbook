@@ -92,7 +92,7 @@ void initState() {
                     });
                   },
                   child: Text(
-                    '',
+                    'Main Course',
                     style: GoogleFonts.lilyScriptOne(color: Colors.black),
                   ),
                 ),
@@ -116,7 +116,7 @@ void initState() {
                 itemCount: filteredRecipes.length,
                 itemBuilder: (context, index) {
                   return RecipeCard(
-                    recipe: filteredRecipes[index], // Pass the entire recipe object
+                    recipe: filteredRecipes[index], 
                   );
                 },
               ),
@@ -148,7 +148,7 @@ class RecipeCard extends StatelessWidget {
 
   const RecipeCard({
     super.key,
-    required this.recipe, // Now this is a Recipe object
+    required this.recipe, 
   });
 
   @override
@@ -158,9 +158,9 @@ class RecipeCard extends StatelessWidget {
       child: ListTile(
         contentPadding: const EdgeInsets.all(10),
         leading: Image.asset(
-          recipe.image, // Use the image from the Recipe object
-          width: 80,
-          height: 80,
+          recipe.image, 
+          width: 100,
+          height: 100,
           fit: BoxFit.cover,
         ),
         title: Text(
@@ -168,13 +168,13 @@ class RecipeCard extends StatelessWidget {
           style: GoogleFonts.lilyScriptOne(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         subtitle: Text(
-          'Description here', // You can update this with a description field from Recipe
+          "Servings: ${recipe.servings}", 
           style: GoogleFonts.lilyScriptOne(),
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
         ),
         onTap: () {
-          // Navigate to RecipeScreen when tapped and pass the recipe object
+
           Navigator.push(
             context,
             MaterialPageRoute(

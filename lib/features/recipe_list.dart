@@ -93,7 +93,7 @@ List<Recipe> recipes = [
   ),
   Recipe(
   title: "Caesar Salad",
-  type: "Salad",
+  type: "Main Course",
   ingredients: [
     "1/2 French Baguette, cut in half and thinly sliced (1/4\" thick)",
     "3 Tbsp extra virgin olive oil",
@@ -128,7 +128,7 @@ List<Recipe> recipes = [
 ),
     Recipe(
       title: "Caprese Salad",
-      type: "Salad",
+      type: "Main Course",
       ingredients: ["Tomato", "Mozzarella", "Basil", "Olive oil", "Balsamic vinegar"],
       image: "assets/images/caprese_salad.jpg",
       steps: [
@@ -170,7 +170,7 @@ List<Recipe> recipes = [
     ),
     Recipe(
       title: "Chicken Wings",
-      type: "Appetizer",
+      type: "Main Course",
       ingredients: ["Chicken wings", "Hot sauce", "Honey", "Garlic", "Butter"],
       image: "assets/images/chicken_wings.jpg",
       steps: [
@@ -197,7 +197,7 @@ List<Recipe> recipes = [
     ),
     Recipe(
       title: "Sandwich",
-      type: "Snack",
+      type: "Main Course",
       ingredients: ["Bread", "Lettuce", "Tomato", "Cheese", "Turkey or Ham", "Mayo"],
       image: "assets/images/sandwich.jpg",
       steps: [
@@ -210,7 +210,7 @@ List<Recipe> recipes = [
     ),
     Recipe(
       title: "Dumplings",
-      type: "Appetizer",
+      type: "Main Course",
       ingredients: ["Dumpling wrappers", "Ground pork", "Ginger", "Garlic", "Soy sauce", "Spring onions"],
       image: "assets/images/dumplings.jpg",
       steps: [
@@ -236,7 +236,7 @@ List<Recipe> recipes = [
     ),
     Recipe(
       title: "French Fries",
-      type: "Side",
+      type: "Main Course",
       ingredients: ["Potatoes", "Oil", "Salt"],
       image: "assets/images/french_fries.jpg",
       steps: [
@@ -249,7 +249,7 @@ List<Recipe> recipes = [
     ),
     Recipe(
       title: "Grilled Cheese Sandwich",
-      type: "Snack",
+      type: "Main Course",
       ingredients: ["Bread", "Cheese", "Butter"],
       image: "assets/images/grilled_cheese.jpg",
       steps: [
@@ -275,7 +275,7 @@ List<Recipe> recipes = [
     ),
     Recipe(
       title: "Hot Dog",
-      type: "Snack",
+      type: "Main Course",
       ingredients: ["Hot dog sausages", "Buns", "Ketchup", "Mustard", "Onions"],
       image: "assets/images/hot_dog.jpg",
       steps: [
@@ -326,7 +326,7 @@ List<Recipe> recipes = [
     ),
     Recipe(
       title: "Omelette",
-      type: "Breakfast",
+      type: "Main Course",
       ingredients: ["Eggs", "Cheese", "Onions", "Tomatoes", "Mushrooms"],
       image: "assets/images/omelette.jpg",
       steps: [

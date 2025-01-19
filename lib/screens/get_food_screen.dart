@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mlkit_image_labeling/google_mlkit_image_labeling.dart';
+import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/services.dart';
 import 'package:notacookbook/features/recipe_list.dart';
@@ -22,10 +23,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Not a Cookbook',
       theme: ThemeData(
-        primarySwatch: Colors.green,
-        scaffoldBackgroundColor: const Color(0xFFFEFAE0), // Background color
+
+        scaffoldBackgroundColor: const Color(0xFFFEFAE0),
         textTheme: GoogleFonts.lilyScriptOneTextTheme(
-          Theme.of(context).textTheme, 
+          Theme.of(context).textTheme,
         ),
       ),
       home: const GetFoodScreen(title: 'Food Detector'),
@@ -45,26 +46,19 @@ class _GetFoodScreenState extends State<GetFoodScreen> {
   File? image;
   late ImagePicker imagePicker;
   late ImageLabeler labeler;
+  late FaceDetector faceDetector;
   String results = "";
   Recipe? matchedRecipe;
-
-  Recipe? getRecipe(String food) {
-    for (var recipe in recipes) {
-      if (recipe.title.toLowerCase() == food.toLowerCase()) {
-        return recipe;
-      }
-    }
-    return null;
-  }
 
   @override
   void initState() {
     super.initState();
     imagePicker = ImagePicker();
+    faceDetector = FaceDetector(options: FaceDetectorOptions());
     loadModel();
   }
 
-  loadModel() async {
+  Future<void> loadModel() async {
     final modelPath = await getModelPath('assets/foods.tflite');
     final options = LocalLabelerOptions(
       confidenceThreshold: 0.7,
@@ -73,28 +67,35 @@ class _GetFoodScreenState extends State<GetFoodScreen> {
     labeler = ImageLabeler(options: options);
   }
 
-  chooseImage() async {
-    XFile? selectedImage =
-        await imagePicker.pickImage(source: ImageSource.gallery);
+  Future<void> chooseImage() async {
+    XFile? selectedImage = await imagePicker.pickImage(source: ImageSource.gallery);
+    processImage(selectedImage);
+  }
+
+  Future<void> captureImage() async {
+    XFile? selectedImage = await imagePicker.pickImage(source: ImageSource.camera);
+    processImage(selectedImage);
+  }
+
+  Future<void> processImage(XFile? selectedImage) async {
     if (selectedImage != null) {
       image = File(selectedImage.path);
+      bool hasFace = await detectFace(image!);
+      if (hasFace) {
+        setState(() {
+          results = "Looking good over there! There is no recipe for a beauty like yours!";
+        });
+        return;
+      }
       performImageLabeling();
-      setState(() {
-        image;
-      });
+      setState(() {});
     }
   }
 
-  captureImage() async {
-    XFile? selectedImage =
-        await imagePicker.pickImage(source: ImageSource.camera);
-    if (selectedImage != null) {
-      image = File(selectedImage.path);
-      performImageLabeling();
-      setState(() {
-        image;
-      });
-    }
+  Future<bool> detectFace(File imageFile) async {
+    final inputImage = InputImage.fromFile(imageFile);
+    final List<Face> faces = await faceDetector.processImage(inputImage);
+    return faces.isNotEmpty;
   }
 
  performImageLabeling() async {
@@ -151,6 +152,7 @@ class _GetFoodScreenState extends State<GetFoodScreen> {
     });
     return;
   }
+   
 
   //custom model
   final customLabeler = ImageLabeler(
@@ -187,6 +189,14 @@ class _GetFoodScreenState extends State<GetFoodScreen> {
 }
 
 
+  Recipe? getRecipe(String food) {
+    for (var recipe in recipes) {
+      if (recipe.title.toLowerCase() == food.toLowerCase()) {
+        return recipe;
+      }
+    }
+    return null;
+  }
 
   Future<String> getModelPath(String asset) async {
     final path = '${(await getApplicationSupportDirectory()).path}/$asset';
@@ -194,8 +204,7 @@ class _GetFoodScreenState extends State<GetFoodScreen> {
     final file = File(path);
     if (!await file.exists()) {
       final byteData = await rootBundle.load(asset);
-      await file.writeAsBytes(byteData.buffer
-          .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
+      await file.writeAsBytes(byteData.buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
     }
     return file.path;
   }
@@ -205,10 +214,7 @@ class _GetFoodScreenState extends State<GetFoodScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFFCCD5AE),
-        title: Text(
-          widget.title,
-          style: GoogleFonts.lilyScriptOne(fontSize: 35),
-        ),
+        title: Text(widget.title, style: GoogleFonts.lilyScriptOne(fontSize: 35)),
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -216,56 +222,45 @@ class _GetFoodScreenState extends State<GetFoodScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height / 2,
-                color: const Color(0xFFE9EDC9), // Background color
+                width: 200,
+                height: 200,
+          
+                decoration: BoxDecoration(
+                  color: const Color(0xFFCCD5AE),
+                  borderRadius: BorderRadius.circular(15),
+             
+
+                ),
                 child: image == null
-                    ? const Icon(Icons.image_outlined, size: 58)
-                    : Image.file(image!),
+                    ? const Icon(Icons.image_outlined, size: 58, color: Colors.grey)
+                    : ClipRRect(borderRadius: BorderRadius.circular(15), child: Image.file(image!, fit: BoxFit.cover)),
               ),
+              const SizedBox(height: 15),
               ElevatedButton(
                 onPressed: chooseImage,
                 onLongPress: captureImage,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFCCD5AE), 
-                ),
-                child: Text("Choose or hold to capture", style: 
-                GoogleFonts.lilyScriptOne(fontSize: 20, color: Colors.black),
-                ) ,
+                style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFCCD5AE)),
+                child: Text("Choose or hold to capture", style: GoogleFonts.lilyScriptOne(fontSize: 20, color: Colors.black)),
               ),
+              const SizedBox(height: 10),
               Card(
-                //color: const Color(0xFFFEFAE0), // Text container color
                 margin: const EdgeInsets.all(10),
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
+                color: Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                child: Padding(
                   padding: const EdgeInsets.all(10),
                   child: Column(
                     children: [
-                      Text(
-                        results.isEmpty
-                            ? "No food detected"
-                            : "$results ",
-                        style: GoogleFonts.lilyScriptOne(fontSize: 20, color: Colors.black),
-                      ),
-                      if (matchedRecipe != null) ...[
-                    
-                        const SizedBox(height: 10),
+                      Text(results, style: GoogleFonts.lilyScriptOne(fontSize: 20, color: Colors.black)),
+                      if (matchedRecipe != null)
                         ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    RecipeScreen(recipe: matchedRecipe!),
-                              ),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFCCD5AE),
+                          onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => RecipeScreen(recipe: matchedRecipe!)),
                           ),
-                          child: Text('View Recipe' , style:GoogleFonts.lilyScriptOne(fontSize: 20, color: Colors.black)),
+                          style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFCCD5AE)),
+                          child: Text('View Recipe', style: GoogleFonts.lilyScriptOne(fontSize: 20, color: Colors.black)),
                         ),
-                      ],
                     ],
                   ),
                 ),
@@ -277,4 +272,3 @@ class _GetFoodScreenState extends State<GetFoodScreen> {
     );
   }
 }
-

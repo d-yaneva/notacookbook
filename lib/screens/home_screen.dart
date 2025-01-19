@@ -20,9 +20,9 @@ class HomeScreen extends StatelessWidget {
       ),
       body: Stack(
         children: [
-          // Background color
+    
           Container(
-            color: const Color(0xFFCCD5AE), // Background color
+            color: const Color(0xFFCCD5AE), 
           ),
           
            Positioned(

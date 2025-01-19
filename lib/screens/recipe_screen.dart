@@ -37,36 +37,35 @@ class _RecipeScreenState extends State<RecipeScreen> {
         length: 2,
         child: Column(
           children: [
-  
-           Row(
-  crossAxisAlignment: CrossAxisAlignment.center,
-  children: [
-    // Image section with padding
-    Padding(
-      padding: const EdgeInsets.all(8.0), // Adds padding around the image
-      child: Image.asset(
-        widget.recipe.image,
-        height: 150,
-        fit: BoxFit.cover,
-      ),
-    ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // Image section with padding
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Image.asset(
+                    widget.recipe.image,
+                    height: 150,
+                    fit: BoxFit.cover,
+                  ),
+                ),
 
-    // Expanded column for text
-    Expanded(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0), // Adds padding around the text content
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Type: ${widget.recipe.type}', style: GoogleFonts.lilyScriptOne(fontSize: 14)),
-            Text('Servings: ${widget.recipe.servings}', style: GoogleFonts.lilyScriptOne(fontSize: 14)),
-            Text('Total Time: ${widget.recipe.totaltime}', style: GoogleFonts.lilyScriptOne(fontSize: 14)),
-          ],
-        ),
-      ),
-    ),
-  ],
-),
+                // Expanded column for text
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Type: ${widget.recipe.type}', style: GoogleFonts.lilyScriptOne(fontSize: 14)),
+                        Text('Servings: ${widget.recipe.servings}', style: GoogleFonts.lilyScriptOne(fontSize: 14)),
+                        Text('Total Time: ${widget.recipe.totaltime}', style: GoogleFonts.lilyScriptOne(fontSize: 14)),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
             // TabBar for Ingredients and Steps
             TabBar(
               labelColor: Colors.black,
@@ -80,6 +79,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
             Expanded(
               child: TabBarView(
                 children: [
+                  // Ingredients tab
                   Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: ListView.builder(
@@ -112,6 +112,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
                       },
                     ),
                   ),
+                  // Steps tab with numbered circles
                   Container(
                     color: const Color(0xFFE7E7E7),
                     child: Padding(
@@ -120,10 +121,25 @@ class _RecipeScreenState extends State<RecipeScreen> {
                         itemCount: widget.recipe.steps.length,
                         itemBuilder: (context, index) {
                           String stepText = widget.recipe.steps[index].keys.first;
-                          int stepNumber = widget.recipe.steps[index].values.first;
                           return ListTile(
+                            leading: Container(
+                              width: 32,
+                              height: 32,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.black, // Adjust color as needed
+                              ),
+                              alignment: Alignment.center,
+                              child: Text(
+                                '${index + 1}', // Step number
+                                style: GoogleFonts.lilyScriptOne(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
                             title: Text(
-                              'Step $stepNumber: $stepText',
+                              stepText,
                               style: GoogleFonts.lilyScriptOne(),
                             ),
                           );
